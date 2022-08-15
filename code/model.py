@@ -60,13 +60,13 @@ class ConvNet(torch.nn.Module):
 
 		self.init_weights()
 
-	def init_weights(self):
+	def init_weights(self) -> None:
 		for index, layer in enumerate(vgg_pretrained.features):
 			if isinstance(layer, torch.nn.Conv2d):
 				self.features[index].weight.data = layer.weight.data
 				self.features[index].bias.data = layer.bias.data
 
-	def forward_conv_layers(self, value):
+	def forward_conv_layers(self, value: torch.Tensor) -> torch.Tensor:
 		res = value
 
 		for index, layer in enumerate(self.features):
@@ -78,7 +78,7 @@ class ConvNet(torch.nn.Module):
 
 		return res
 
-	def forward(self, value):
+	def forward(self, value: torch.Tensor) -> list:
 		res = self.forward_conv_layers(value)
 		res = res.view(res.size()[0], -1)
 		res = self.classifier(res)
