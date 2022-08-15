@@ -5,7 +5,7 @@ vgg_pretrained = torchvision.models.vgg16(pretrained=True)
 
 
 class ConvNet(torch.nn.Module):
-	def __init__(self, n_classes):
+	def __init__(self):
 		super(ConvNet, self).__init__()
 
 		self.features = torch.nn.Sequential(
@@ -43,20 +43,13 @@ class ConvNet(torch.nn.Module):
 			torch.nn.ReLU(),
 			torch.nn.Conv2d(512, 512, (3, 3), padding=1),
 			torch.nn.ReLU(),
-			torch.nn.MaxPool2d(2, stride=2, return_indices=True)
+			torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+
+			torch.nn.Conv2d(512, 4096, (8, 8), padding=0),
+			torch.nn.Conv2d(4096, 4096, (1, 1), padding=0)
 		)
 
 		self.pool_indices = {}
-
-		self.classifier = torch.nn.Sequential(
-			torch.nn.Linear(512 * 7 * 7, 4096),
-			torch.nn.ReLU(),
-			torch.nn.Dropout(0.6),
-			torch.nn.Linear(4096, 4096),
-			torch.nn.ReLU(),
-			torch.nn.Dropout(0.6),
-			torch.nn.Linear(4096, n_classes)
-		)
 
 		self.init_weights()
 
@@ -80,7 +73,5 @@ class ConvNet(torch.nn.Module):
 
 	def forward(self, value: torch.Tensor) -> list:
 		res = self.forward_conv_layers(value)
-		res = res.view(res.size()[0], -1)
-		res = self.classifier(res)
 
 		return res
