@@ -49,6 +49,8 @@ class ConvNet(torch.nn.Module):
             torch.nn.MaxPool2d(2, padding=2, return_indices=True)
         )
 
+        self.pool_indices = {}
+
         self.classifier = torch.nn.Sequential(
             torch.nn.Linear(512 * 7 * 7, 4096),
             torch.nn.ReLU(),
@@ -66,3 +68,16 @@ class ConvNet(torch.nn.Module):
             if isinstance(layer, torch.nn.Conv2d):
                 self.features[index].weight.data = layer.weight.data
                 self.features[index].bias.data = layer.bias.data
+
+    def forward_conv_layers(self, value):
+        res = value
+
+        for index, layer in enumerate(self.features):
+            if isinstance(layer, torch.nn.MaxPool2d):
+                pool_indx, res = layer(res)
+                self.pool_indices[index] = pool_indx
+            else:
+                res = layer(res)
+        
+        return res
+
