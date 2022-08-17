@@ -3,35 +3,46 @@ import model
 from tqdm.autonotebook import tqdm, trange
 
 
-def train(net: model.DeConvNet, epochs: int, use_gpu: bool, optimizer, criterion, data) -> tuple:
-	net.train(True)
+def train(
+    net: model.DeConvNet, epochs: int,
+    use_gpu: bool, optimizer: torch.optim,
+    criterion: torch.nn.modules.loss, data: dict
+) -> tuple:
 
-	loss_history = []
+	loss_history = {"train": [], "val": []}
 	pbar = trange(epochs, desc="Epoch")
 
 	for epoch in pbar:
-		curr_loss = 0.0
 
-		for batch in data:
-			inputs, labels = batch
-			if use_gpu:
-				inputs, labels = inputs.cuda(), labels.cuda()
+		for phase in ["train", "val"]:
+			net.train(True) if phase == "train" else net.eval()
+			curr_loss = 0.0
 
-			optimizer.zero_grad()
-			outputs = net(inputs)
+			for batch in tqdm(data[phase], leave=False, desc=f'{phase} iter'):
+				inputs, labels = batch
+				if use_gpu:
+					inputs, labels = inputs.cuda(), labels.cuda()
 
-			loss = criterion(outputs, labels)
+				if phase == "train":
+					optimizer.zero_grad()
+				if phase == "val":
+					with torch.no_grad():
+						outputs = net(inputs)
+				else:
+					outputs = net(inputs)
 
-			loss.backward()
-			optimizer.step()
+				loss = criterion(outputs, labels)
 
-			curr_loss += loss.item()
-			print(curr_loss)
+				if phase == "train":
+					loss.backward()
+					optimizer.step()
 
-		epoch_loss = curr_loss / 4
+				curr_loss += loss.item()
 
-		loss_history.append(epoch_loss)
+			epoch_loss = curr_loss / 4 if phase == "train" else curr_loss / 2
 
-		pbar.set_description("Epoch: {} Loss: {:.4f}".format(epoch, epoch_loss))
+			loss_history[phase].append(epoch_loss)
+
+			pbar.set_description("{} Loss: {:.4f}".format(phase, epoch_loss))
 
 	return net, loss_history
