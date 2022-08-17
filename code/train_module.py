@@ -14,10 +14,9 @@ def train(net: model.DeConvNet, epochs: int, use_gpu: bool, scheduler, optimizer
 
 		curr_loss = 0.0
 
-		for batch in tqdm(data, leave=False, desc=f"{epoch} epoch"):
+		for batch in data:
 			inputs, labels = batch
-			print(labels.shape)
-			if use_gpu:
+			if not use_gpu:
 				inputs, labels = inputs.cuda(), labels.cuda()
 
 			optimizer.zero_grad()
@@ -37,3 +36,4 @@ def train(net: model.DeConvNet, epochs: int, use_gpu: bool, scheduler, optimizer
 		pbar.set_description("Epoch: {} Loss: {:.4f}".format(epoch, epoch_loss))
 
 	return net, loss_history
+
