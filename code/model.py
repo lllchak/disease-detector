@@ -46,7 +46,7 @@ class EncoderNet(torch.nn.Module):
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
 
             torch.nn.Conv2d(512, 4096, (8, 8), padding=0),
-            torch.nn.Conv2d(4096, 4096, (1, 1), padding=0)
+            torch.nn.Conv2d(4096, 4096, (1, 1), padding=0),
         )
 
         self.pool_indices = {}
@@ -118,7 +118,8 @@ class DecoderNet(torch.nn.Module):
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(64, 64, (3, 3), padding=1),
             torch.nn.ReLU(),
-            torch.nn.ConvTranspose2d(64, 2, (1, 1), padding=0)
+            torch.nn.ConvTranspose2d(64, 1, (1, 1), padding=0),
+            torch.nn.Sigmoid()
         )
 
         self.init_weights()
@@ -168,3 +169,4 @@ class DeConvNet(torch.nn.Module):
         res = self.decoder_net.forward_deconv_layers(res, self.encoder_net.pool_indices)
 
         return res
+
