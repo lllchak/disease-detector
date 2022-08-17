@@ -3,20 +3,18 @@ import model
 from tqdm.autonotebook import tqdm, trange
 
 
-def train(net: model.DeConvNet, epochs: int, use_gpu: bool, scheduler, optimizer, criterion, data) -> tuple:
+def train(net: model.DeConvNet, epochs: int, use_gpu: bool, optimizer, criterion, data) -> tuple:
 	net.train(True)
 
 	loss_history = []
 	pbar = trange(epochs, desc="Epoch")
 
 	for epoch in pbar:
-		scheduler.step()
-
 		curr_loss = 0.0
 
 		for batch in data:
 			inputs, labels = batch
-			if not use_gpu:
+			if use_gpu:
 				inputs, labels = inputs.cuda(), labels.cuda()
 
 			optimizer.zero_grad()
@@ -28,12 +26,12 @@ def train(net: model.DeConvNet, epochs: int, use_gpu: bool, scheduler, optimizer
 			optimizer.step()
 
 			curr_loss += loss.item()
+			print(curr_loss)
 
-		epoch_loss = curr_loss / 100
+		epoch_loss = curr_loss / 4
 
 		loss_history.append(epoch_loss)
 
 		pbar.set_description("Epoch: {} Loss: {:.4f}".format(epoch, epoch_loss))
 
 	return net, loss_history
-
