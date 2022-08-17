@@ -10,43 +10,65 @@ class EncoderNet(torch.nn.Module):
 
         self.features = torch.nn.Sequential(
             torch.nn.Conv2d(3, 64, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(64),
             torch.nn.ReLU(),
             torch.nn.Conv2d(64, 64, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(64),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Conv2d(64, 128, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(128),
             torch.nn.ReLU(),
             torch.nn.Conv2d(128, 128, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(128),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Conv2d(128, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
             torch.nn.ReLU(),
             torch.nn.Conv2d(256, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
             torch.nn.ReLU(),
             torch.nn.Conv2d(256, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Conv2d(256, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.Conv2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.Conv2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Conv2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.Conv2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.Conv2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(2, stride=2, return_indices=True),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Conv2d(512, 4096, (8, 8), padding=0),
+            torch.nn.BatchNorm2d(4096),
+            torch.nn.ReLU(),
             torch.nn.Conv2d(4096, 4096, (1, 1), padding=0),
+            torch.nn.BatchNorm2d(4096),
+            torch.nn.ReLU()
         )
 
         self.pool_indices = {}
@@ -54,10 +76,14 @@ class EncoderNet(torch.nn.Module):
         self.init_weights()
 
     def init_weights(self) -> None:
-        for index, layer in enumerate(vgg_pretrained.features):
+        for layer in self.features:
             if isinstance(layer, torch.nn.Conv2d):
-                self.features[index].weight.data = layer.weight.data
-                self.features[index].bias.data = layer.bias.data
+                torch.nn.init.kaiming_normal_(layer.weight, mode='fan_out', nonlinearity='relu')
+                if layer.bias is not None:
+                        torch.nn.init.constant_(layer.bias, 0)
+            elif isinstance(layer, torch.nn.BatchNorm2d):
+                    torch.nn.init.constant_(layer.weight, 1)
+                    torch.nn.init.constant_(layer.bias, 0)
 
     def forward_conv_layers(self, value: torch.Tensor) -> torch.Tensor:
         res = value
@@ -83,40 +109,53 @@ class DecoderNet(torch.nn.Module):
 
         self.features = torch.nn.Sequential(
             torch.nn.ConvTranspose2d(4096, 512, (8, 8), padding=0),
+            torch.nn.BatchNorm2d(512),
+            torch.nn.ReLU(),
             torch.nn.MaxUnpool2d(2, stride=2),
 
+            torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
-            torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
             torch.nn.MaxUnpool2d(2, stride=2),
 
+            torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
-            torch.nn.ReLU(),
-            torch.nn.ConvTranspose2d(512, 512, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(512),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(512, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
+            torch.nn.ReLU(),
             torch.nn.MaxUnpool2d(2, stride=2),
 
+            torch.nn.ConvTranspose2d(256, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(256, 256, (3, 3), padding=1),
-            torch.nn.ReLU(),
-            torch.nn.ConvTranspose2d(256, 256, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(256),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(256, 128, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(128),
+            torch.nn.ReLU(),
             torch.nn.MaxUnpool2d(2, stride=2),
 
-            torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(128, 128, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(128),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(128, 64, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(64),
+            torch.nn.ReLU(),
             torch.nn.MaxUnpool2d(2, stride=2),
 
-            torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(64, 64, (3, 3), padding=1),
+            torch.nn.BatchNorm2d(64),
             torch.nn.ReLU(),
             torch.nn.ConvTranspose2d(64, 1, (1, 1), padding=0),
             torch.nn.Sigmoid()
@@ -130,6 +169,9 @@ class DecoderNet(torch.nn.Module):
                 torch.nn.init.kaiming_normal_(layer.weight, mode='fan_out', nonlinearity='relu')
                 if layer.bias is not None:
                         torch.nn.init.constant_(layer.bias, 0)
+            elif isinstance(layer, torch.nn.BatchNorm2d):
+                    torch.nn.init.constant_(layer.weight, 1)
+                    torch.nn.init.constant_(layer.bias, 0)
 
     def forward_deconv_layers(self, value: torch.Tensor, pool_indices: dict) -> torch.Tensor:
         pool_indices_list = list(pool_indices.keys())
@@ -169,4 +211,3 @@ class DeConvNet(torch.nn.Module):
         res = self.decoder_net.forward_deconv_layers(res, self.encoder_net.pool_indices)
 
         return res
-
