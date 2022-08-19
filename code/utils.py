@@ -1,6 +1,7 @@
 import model
 import torch
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_metrics(history: dict) -> None:
@@ -104,3 +105,19 @@ def compare_preds_with_ground_truth(
 			plt.imshow(preds[i][0].detach().numpy(), cmap="gray")
 
 		plt.show()
+
+
+def plot_samples(
+		data: np.array,
+        ground_truth: np.array
+) -> None:
+	plt.figure(figsize=(30, 6))
+
+	for i in range(10):
+		plt.subplot(2, 10, i + 1)
+		plt.imshow(data[i], cmap="BuPu")
+
+		plt.subplot(2, 10, i + 11)
+		plt.imshow(ground_truth[i], cmap="BuPu")
+
+	plt.show()
