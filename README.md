@@ -34,5 +34,5 @@ Library:
 ![training_samples](https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg)
 
 ### 2.4 Metric
-- Mead Intersection over Union
-![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula.png)
+- Mean Intersection over Union
+![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula.webp)
