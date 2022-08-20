@@ -31,4 +31,8 @@ Library:
 - Instance-wise training: handles objects in various scale and position
 
 ### 2.3 Training samples
-![alt text](https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg)
+![training_samples](https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg)
+
+### 2.4 Metric
+- Mead Intersection over Union
+![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg)
