@@ -35,4 +35,4 @@ Library:
 
 ### 2.4 Metric
 - Mead Intersection over Union
-![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg)
+![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula.png)
