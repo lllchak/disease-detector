@@ -35,4 +35,4 @@ Library:
 
 ### 2.4 Metric
 - Mean Intersection over Union
-![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula.png)
+![iou_formula](https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula_image.png)
