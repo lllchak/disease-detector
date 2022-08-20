@@ -1,7 +1,8 @@
 import torch
 import model
 import utils
-from tqdm.autonotebook import tqdm, trange
+from tqdm import tqdm
+from tqdm import trange
 
 
 def train(
@@ -40,14 +41,13 @@ def train(
 
 				loss = criterion(outputs, labels)
 
-
 				if phase == "train":
 					loss.backward()
 					optimizer.step()
 
 				curr_loss += loss.item()
 
-			epoch_loss = curr_loss / 4 if phase == "train" else curr_loss / 2
+			epoch_loss = curr_loss / 40 if phase == "train" else curr_loss / 5
 
 			loss_history[phase].append(epoch_loss)
 

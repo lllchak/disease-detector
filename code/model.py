@@ -1,8 +1,6 @@
 import torch
 import torchvision
 
-vgg_pretrained = torchvision.models.vgg16(pretrained=True)
-
 
 class EncoderNet(torch.nn.Module):
     def __init__(self) -> None:

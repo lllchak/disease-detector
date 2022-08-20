@@ -61,7 +61,7 @@ def compare_preds_with_ground_truth(
 
 		plt.figure(figsize=(30, 12))
 
-		for i in range(10):
+		for i in range(4):
 			plt.title("prediction", fontsize=15)
 			plt.subplot(3, 10, i + 1)
 			plt.imshow(images[i][0].detach().numpy(), cmap="gray")
@@ -81,7 +81,7 @@ def compare_preds_with_ground_truth(
 
 		plt.figure(figsize=(30, 12))
 
-		for i in range(10):
+		for i in range(4):
 			plt.title("prediction", fontsize=15)
 			plt.subplot(3, 10, i + 1)
 			plt.imshow(images[i][0].detach().numpy(), cmap="gray")
@@ -101,7 +101,7 @@ def compare_preds_with_ground_truth(
 
 		plt.figure(figsize=(30, 12))
 
-		for i in range(10):
+		for i in range(4):
 			plt.title("prediction", fontsize=15)
 			plt.subplot(3, 10, i + 1)
 			plt.imshow(images[i][0].detach().numpy(), cmap="gray")
@@ -125,9 +125,9 @@ def plot_samples(
 
 	for i in range(10):
 		plt.subplot(2, 10, i + 1)
-		plt.imshow(data[i], cmap="BuPu")
+		plt.imshow(data[i], cmap="gray")
 
 		plt.subplot(2, 10, i + 11)
-		plt.imshow(ground_truth[i], cmap="BuPu")
+		plt.imshow(ground_truth[i], cmap="gray")
 
 	plt.show()
