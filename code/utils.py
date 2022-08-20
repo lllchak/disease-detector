@@ -4,6 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def iou_score(outputs: torch.Tensor, labels: torch.Tensor):
+	SMOOTH = 1e-8
+	intersection = (outputs & labels).float().sum()  # Will be zero if Truth=0 or Prediction=0
+	union = (outputs | labels).float().sum()  # Will be zzero if both are 0
+
+	iou = (intersection + SMOOTH) / (union + SMOOTH)
+
+	return iou
+
+
 def plot_metrics(history: dict) -> None:
 	plt.figure(figsize=(12, 6))
 
