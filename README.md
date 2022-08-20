@@ -44,5 +44,5 @@ Library:
 ### 2.5 Network Architecture
 - The overall architecture was built around VGG16 (with MaxUnpooling and Transposed Convolution)
 <p align="center">
-  <img src="https://github.com/lllchak/DiseaseDetector/blob/master/img/vgg16_achitecture.png" />
+  <img src="https://github.com/lllchak/DiseaseDetector/blob/master/img/vgg16_achitecture_image.png" />
 </p>
