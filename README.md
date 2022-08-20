@@ -30,7 +30,7 @@ Library:
 - Deconvotution network: unpooling and deconvolution layers
 - Instance-wise training: handles objects in various scale and position
 
-### 2.3 Training samples
+### 2.3 Training Samples
 <p align="center">
   <img src="https://github.com/lllchak/DiseaseDetector/blob/master/img/train_samples.jpg" />
 </p>
@@ -39,4 +39,10 @@ Library:
 - Mean Intersection over Union
 <p align="center">
   <img src="https://github.com/lllchak/DiseaseDetector/blob/master/img/iou_formula_image.png" />
+</p>
+
+### 2.5 Network Architecture
+- The overall architecture was built around VGG16 (with MaxUnpooling and Transposed Convolution)
+<p align="center">
+  <img src="https://github.com/lllchak/DiseaseDetector/blob/master/img/vgg16_achitecture.png" />
 </p>
