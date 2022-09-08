@@ -1,8 +1,7 @@
 import torch
 import model
 import utils
-from tqdm import tqdm
-from tqdm import trange
+from tqdm.autonotebook import tqdm, trange
 
 
 def train(
